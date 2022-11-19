@@ -1,0 +1,85 @@
+<div class="px-4 pb-4 border-b border-slate-800 text-6xl flex font-playfair font-bold">
+{{ date.strftime('%-d %B %Y').lower() }}
+<span class="flex-grow inline-block"></span>
+{{ date.strftime('week %-W, %A').lower() }}
+</div>
+<div class="grid grid-cols-4 gap-10 px-4">
+  <div class="flex flex-col">
+    <div class="daily-heading">
+      <div class="mx-auto">agenda</div>
+    </div>
+    {% for time in times %}
+    <div class="h-5mm border-b border-slate-800 pb-1 font-playfair text-base font-bold flex items-center"><div>{{ time }}</div></div>
+    {% if not loop.last %}
+    <div class="h-5mm border-b border-slate-800"></div>
+    {% endif %}
+    {% endfor %}
+  </div>
+
+  <div class="flex flex-col col-span-2">
+    <div class="daily-heading">
+      <div class="mx-auto">highlight</div>
+    </div>
+    {% for i in range(2) %}
+    <div class="h-5mm border-b border-slate-800"></div>
+    {% endfor %}
+    <div class="daily-heading">
+      <div class="mx-auto">to do</div>
+    </div>
+    <div class="grid grid-cols-2 gap-4">
+      {% for i in range(2) %} 
+      <div>
+      {% for j in range(10) %}
+      <div class="h-5mm border-b border-slate-800 flex items-center">
+        <div class="h-4 w-4 rounded-full border border-slate-800"></div>
+      </div>
+      {% endfor %}
+      </div>
+      {% endfor %}
+    </div>
+
+    <div class="grid grid-cols-2 gap-4">
+      <div class="flex flex-col">
+        <div class="daily-heading"><div class="mx-auto">food</div></div>
+        {% for i in range(7) %}
+        <div class="h-5mm border-b border-slate-800"></div>
+        {% endfor %}
+      </div>
+
+      <div class="flex flex-col">
+        <div class="daily-heading"><div class="mx-auto">learned today</div></div>
+        {% for i in range(7) %}
+        <div class="h-5mm border-b border-slate-800"></div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <div class="flex flex-col">
+    <div class="daily-heading"><div class="mx-auto">notes</div></div>
+    {% for i in range(15 - ((mini_cal|length) // 7 % 5)) %}
+    <div class="h-5mm border-b border-slate-800"></div>
+    {% endfor %}
+    <div class="daily-heading"><div class="mx-auto">{{ date.strftime('%B').lower() }}</div></div>
+    <div class="grid grid-cols-7">
+        <div class="mini-cal-day">m</div>
+        <div class="mini-cal-day">t</div>
+        <div class="mini-cal-day">w</div>
+        <div class="mini-cal-day">t</div>
+        <div class="mini-cal-day">f</div>
+        <div class="mini-cal-day">s</div>
+        <div class="mini-cal-day">s</div>
+        {% for cal_date in mini_cal %}
+        {% if cal_date[2] %}
+        {% if cal_date[1] == date.strftime('%Y-%m-%d') %}
+        <div class="mini-cal-date"><div class="bg-slate-200 aspect-square h-full rounded-full mx-auto"><a href="#{{ cal_date[1] }}">{{ cal_date[0] }}</a></div></div>
+        {% else %}
+        <div class="mini-cal-date"><a href="#{{ cal_date[1] }}">{{ cal_date[0] }}</a></div>
+        {% endif %}
+        {% else %}
+        <div class="mini-cal-date text-slate-300"><a href="#{{ cal_date[1] }}">{{ cal_date[0] }}</a></div>
+        {% endif %}
+        {% endfor %}
+    </div>
+  </div>
+</div>
