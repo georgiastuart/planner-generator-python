@@ -15,9 +15,6 @@ def mini_calendar_dates(month, year):
     if (current_day.month != month and current_day.weekday() == 6) or ((current_day + timedelta(days=1)).month != month and current_day.weekday() == 6):
       break
     current_day += timedelta(days=1)
-
-
-
   return date_list
 
 def build_planner(pages, j2_env: j2.Environment):
@@ -46,6 +43,12 @@ def build_daily_pages(start: date, end: date, start_t: datetime, end_t: datetime
     )
 
   return day_templates
+
+def build_weekly_pages(start: date, end: date, start_t: datetime, end_t: datetime, j2_env: j2.Environment):
+  def build_weekly_page(inp_monday, j2_template: j2.Template, times):
+    return j2_template.render(monday=inp_monday, times=times, mini_cal=mini_calendar_dates(inp_monday.month, inp_monday.year)) 
+
+  
 
 
 if __name__ == "__main__":
