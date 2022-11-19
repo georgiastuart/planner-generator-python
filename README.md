@@ -24,3 +24,7 @@ to install the tailwind dependency.
 ```bash
 npm run build
 ```
+
+To create the PDF from the HTML output, I recommend opening `index.html` in 
+Chrome and using the "Save as PDF" feature in the print menu. If using this 
+technique, set margins to none and enable background images.
