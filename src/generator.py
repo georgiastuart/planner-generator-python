@@ -223,17 +223,17 @@ if __name__ == "__main__":
     loader=j2.FileSystemLoader('./src/templates')
   )
 
-  start_date = date(2022, 12, 26)
-  end_date = date(2023, 4, 2)
+  start_date = date(2022, 10, 31)
+  end_date = date(2023, 1, 1)
 
-  month_start = date(2023, 1, 1)
-  month_end = date(2023, 3, 1)
+  month_start = date(2022, 11, 1)
+  month_end = date(2022, 12, 1)
 
   start_time = datetime(2022, 12, 26, 7, 0, 0)
   end_time = datetime(2022, 12, 26, 19, 0, 0)
 
-  year_start = 2023
-  year_end = 2023
+  year_start = 2022
+  year_end = 2022
 
   annuals = build_annual_pages(year_start, year_end, env)
   months = build_monthly_pages(month_start, month_end, env)
