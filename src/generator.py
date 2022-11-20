@@ -145,7 +145,7 @@ def build_monthly_goal_pages(start, end, j2_env: j2.Environment):
   cur_month = start + relativedelta(months=+0)
 
 
-  while cur_month < end:
+  while cur_month <= end:
     content = build_monthly_goal_page(cur_month, annual_template)
     monthly_templates[f"{cur_month.strftime('%Y-%m')}-goals"] = frame_template.render(
       content=content,
@@ -179,6 +179,7 @@ if __name__ == "__main__":
   pages.extend(list(weeks.values()))
   pages.extend(list(days.values()))
   pages.extend(list(annual_goals.values()))
+  pages.extend(list(monthly_goals.values()))
 
   planner = build_planner(pages, env)
 
