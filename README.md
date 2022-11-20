@@ -7,6 +7,7 @@ iPad app goodnotes 5.
 
 - Python3
 - Jinja2
+- python-dateutil
 - Node / NPM
 
 ## Install
