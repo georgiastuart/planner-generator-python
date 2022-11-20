@@ -14,10 +14,34 @@
   @apply font-bold font-playfair text-4xl flex h-10mm items-center;
 }
 
+.weekly-day-heading {
+  @apply font-bold font-playfair text-2xl flex h-5mm items-center;
+}
+
 .mini-cal-day {
   @apply font-bold font-playfair text-2xl h-5mm items-center text-center;
 }
 
 .mini-cal-date {
   @apply font-playfair text-2xl h-5mm items-center text-center;
+}
+
+.monthly-cal-day {
+  @apply flex-grow font-bold font-playfair text-2xl h-5mm items-center justify-center text-center pb-2;
+}
+
+.monthly-cal-date {
+  @apply font-bold font-playfair text-2xl border-t border-l border-slate-800 pl-2 pb-2;
+}
+
+.monthly-cal .monthly-cal-date:nth-child(7n) {
+  @apply border-r;
+}
+
+.monthly-cal .monthly-cal-date:nth-last-child(-n + 7) {
+  @apply border-b;
+}
+
+.monthly-title {
+  @apply font-bold font-playfair text-3xl flex h-5mm items-center;
 }
