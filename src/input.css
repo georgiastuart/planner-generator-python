@@ -59,7 +59,7 @@
 }
 
 .weekly-goals-header {
-  @apply font-bold font-playfair text-6xl flex h-5mm;
+  @apply font-bold font-playfair text-4xl flex h-5mm;
 }
 
 .weekly-area-header {

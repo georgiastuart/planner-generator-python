@@ -2,9 +2,12 @@
   <div class="m-6">
   {{ content|safe }}
   </div>
+  <div class="absolute bottom-0 right-0 text-slate-300 text-2xl pr-6">  
   {% if goal_link %}
-  <div class="absolute bottom-0 right-0 text-slate-300 text-2xl pr-6">
-  <a href="#{{ goal_link }}"><i class="fa-solid fa-bullseye"></i></a>
-  </div>
+  <a href="#{{ goal_link }}"><i class="fa-solid fa-bullseye pl-2"></i></a>
   {% endif %}
+  {% if work_goal_link %}
+  <a href="#{{ work_goal_link }}"><i class="fa-solid fa-briefcase pl-2"></i></a>
+  {% endif %}
+  </div>
 </div>
