@@ -1,0 +1,22 @@
+<div class="grid grid-cols-2 gap-8">
+<div>
+<div class="grid grid-cols-2 gap-x-6 gap-y-5mm">
+<div class="weekly-goals-header col-span-2 text-6xl"><a href="#{{ first.strftime('%Y-W%W') }}">{{ first.strftime('%Y W%-W') }} goals</a></div>
+{% for area in areas_of_focus %}
+<div class="flex flex-col">
+<div class="weekly-area-header flex items-center"><div class="align-middle"><i class="{{ area[1] }} pr-2 text-2xl"></div></i><div>{{ area[0].lower() }}</div></div>
+{% for i in range(10) %}
+<div class="border-b border-slate-800 h-5mm"></div>
+{% endfor %}
+</div>
+{% endfor %}
+</div>
+</div>
+<div class="flex flex-col">
+<div class="reflection-header w-full"><div class="text-end w-full">reflections</div></div>
+{% for i in range(24) %}
+<div class="border-b border-slate-800 h-5mm"></div>
+{% endfor %}
+</div>
+<div class="col-span-2 h-5mm"></div>
+</div>

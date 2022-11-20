@@ -57,3 +57,15 @@
 .annual-goals-header {
   @apply font-bold font-playfair text-8xl flex h-20mm items-center;
 }
+
+.weekly-goals-header {
+  @apply font-bold font-playfair text-6xl flex h-5mm;
+}
+
+.weekly-area-header {
+  @apply font-bold font-playfair text-3xl flex h-5mm items-center;
+}
+
+.reflection-header {
+  @apply font-bold font-playfair text-4xl flex h-5mm items-center;
+}

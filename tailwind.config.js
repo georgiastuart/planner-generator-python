@@ -20,6 +20,9 @@ module.exports = {
         '15mm': '31.25mm',
         '20mm': '41.6667mm',
         '25mm': '52.08mm'
+      },
+      spacing: {
+        '5mm': '10.4167mm'
       }
     },
   },

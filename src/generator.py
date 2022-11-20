@@ -71,7 +71,8 @@ def build_weekly_pages(start: date, end: date, start_t: datetime, end_t: datetim
     content = build_weekly_page(cur_monday, weekly_template, times)
     week_templates[cur_monday.strftime('%Y-W%W')] = frame_template.render(
       content=content,
-      id=cur_monday.strftime('%Y-W%W')
+      id=cur_monday.strftime('%Y-W%W'),
+      goal_link=f"{cur_monday.strftime('%Y-W%W')}-goals"
     )
     cur_monday += timedelta(days=7)
 
@@ -155,6 +156,26 @@ def build_monthly_goal_pages(start, end, j2_env: j2.Environment):
 
   return monthly_templates
 
+def build_weekly_goal_pages(start, end, j2_env: j2.Environment):
+  def build_monthly_goal_page(first, j2_template: j2.Template):
+    return j2_template.render(first=first, areas_of_focus=AREAS_OF_FOCUS)
+
+  weekly_template = j2_env.get_template('weekly_goals.html.j2')
+  frame_template = j2_env.get_template('frame.html.j2')
+  weekly_templates = {}
+  cur_week = start + relativedelta(weeks=+0)
+
+
+  while cur_week < end:
+    content = build_monthly_goal_page(cur_week, weekly_template)
+    weekly_templates[f"{cur_week.strftime('%Y-W%W')}-goals"] = frame_template.render(
+      content=content,
+      id=f"{cur_week.strftime('%Y-W%W')}-goals"
+    )
+    cur_week += relativedelta(weeks=+1)
+
+  return weekly_templates
+
 
 if __name__ == "__main__":
   env = j2.Environment(
@@ -173,6 +194,8 @@ if __name__ == "__main__":
   days = build_daily_pages(start_date, end_date, start_time, end_time, env)
   annual_goals = build_annual_goal_pages(2023, 2023, env)
   monthly_goals = build_monthly_goal_pages(date(2023, 1, 1), date(2023, 3, 1), env)
+  weekly_goals = build_weekly_goal_pages(start_date, end_date, env)
+
 
   pages = list(annuals.values())
   pages.extend(list(months.values()))
@@ -180,6 +203,7 @@ if __name__ == "__main__":
   pages.extend(list(days.values()))
   pages.extend(list(annual_goals.values()))
   pages.extend(list(monthly_goals.values()))
+  pages.extend(list(weekly_goals.values()))
 
   planner = build_planner(pages, env)
 
