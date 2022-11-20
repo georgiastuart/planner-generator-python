@@ -19,7 +19,7 @@
 }
 
 .mini-cal-day {
-  @apply font-bold font-playfair text-2xl h-5mm items-center text-center;
+  @apply font-black font-playfair text-2xl h-5mm items-center text-center;
 }
 
 .mini-cal-date {
@@ -27,7 +27,7 @@
 }
 
 .monthly-cal-day {
-  @apply flex-grow font-bold font-playfair text-2xl h-5mm items-center justify-center text-center pb-2;
+  @apply flex-grow flex font-bold font-playfair text-2xl h-10mm items-end justify-center text-center pb-2;
 }
 
 .monthly-cal-date {
@@ -43,5 +43,17 @@
 }
 
 .monthly-title {
-  @apply font-bold font-playfair text-3xl flex h-5mm items-center;
+  @apply font-bold font-playfair text-4xl flex h-10mm items-center;
+}
+
+.annual-title {
+  @apply font-bold font-playfair text-8xl flex h-10mm items-center;
+}
+
+.area-header {
+  @apply font-bold font-playfair text-4xl flex h-5mm items-center;
+}
+
+.annual-goals-header {
+  @apply font-bold font-playfair text-8xl flex h-20mm items-center;
 }

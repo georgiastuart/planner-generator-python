@@ -1,5 +1,5 @@
 <div class="flex flex-col">
-<div class="annual-goals-header"><div class="mx-auto"><a href="#{{ first.strftime('%Y-%m') }}">{{ first.strftime('%B %Y').lower() }} goals</a></div></div>
+<div class="annual-goals-header"><div class="mx-auto"><a href="#{{ year }}">{{ year }} goals</a></div></div>
 <div class="grid grid-cols-2 gap-6">
 {% for area in areas_of_focus %}
 <div class="flex flex-col">

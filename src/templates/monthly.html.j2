@@ -1,6 +1,8 @@
 <div class="grid grid-cols-8">
 <div class="pr-4">
-  <div class="monthly-title">{{ month.strftime('%B %Y').lower() }}</div>
+  <div class="monthly-title">
+  <a href="#{{ month.strftime('%Y') }}">{{ month.strftime('%b %Y').lower() }}</a>
+  </div>
   {% for i in range(24) %}
   <div class="border-b border-slate-800 h-5mm"></div>
   {% endfor %}
@@ -40,4 +42,5 @@
 {% endfor %}
 {% endif %}
 </div>
+<div class="h-5mm col-span-8"></div>
 </div>

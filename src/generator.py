@@ -2,6 +2,13 @@ import jinja2 as j2
 from datetime import date, timedelta, datetime
 from dateutil.relativedelta import relativedelta
 
+AREAS_OF_FOCUS = [
+  ('Personal Growth', 'fa-solid fa-brain'),
+  ('Relationships', 'fa-solid fa-heart'),
+  ('Health & Wellness', 'fa-solid fa-dumbbell'),
+  ('Household Management', 'fa-solid fa-house'),
+]
+
 def mini_calendar_dates(month, year):
   first_day = date(year, month, 1)
   current_day = first_day - timedelta(days=first_day.weekday())
@@ -12,7 +19,7 @@ def mini_calendar_dates(month, year):
     cur_month = True
     if current_day.month != month:
       cur_month = False
-    date_list.append((current_day.strftime('%-d'), current_day.strftime('%Y-%m-%d'), cur_month, current_day.strftime('W%-W'), current_day.strftime('%Y-W%W')))
+    date_list.append((current_day.strftime('%-d'), current_day.strftime('%Y-%m-%d'), cur_month, current_day.strftime('W%-W'), current_day.strftime('%Y-W%W'), first_day.strftime('%B').lower(), first_day.strftime('%Y-%m')))
     if (current_day.month != month and current_day.weekday() == 6) or ((current_day + timedelta(days=1)).month != month and current_day.weekday() == 6):
       break
     current_day += timedelta(days=1)
@@ -83,11 +90,70 @@ def build_monthly_pages(start: date, end: date, j2_env: j2.Environment):
     content = build_monthly_page(cur_month, monthly_template)
     month_templates[cur_month.strftime('%Y-%m')] = frame_template.render(
       content=content,
-      id=cur_month.strftime('%Y-%m')
+      id=cur_month.strftime('%Y-%m'),
+      goal_link=f"{cur_month.strftime('%Y-%m')}-goals"
     )
     cur_month += relativedelta(months=+1)
 
   return month_templates
+
+def build_annual_pages(start_year, end_year, j2_env: j2.Environment):
+  def build_annual_page(year, j2_template: j2.Template):
+    mini_cal_list = []
+    for i in range(12):
+      mini_cal_list.append(mini_calendar_dates(i + 1, year))
+    return j2_template.render(year=year, mini_cal_list=mini_cal_list)
+
+  annual_template = j2_env.get_template('annual_overview.html.j2')
+  frame_template = j2_env.get_template('frame.html.j2')
+  annual_templates = {}
+
+  for year in range(start_year, end_year + 1):
+    content = build_annual_page(year, annual_template)
+    annual_templates[str(year)] = frame_template.render(
+      content=content,
+      id=str(year),
+      goal_link=f'{year}-goals'
+    )
+
+  return annual_templates
+
+def build_annual_goal_pages(start_year, end_year, j2_env: j2.Environment):
+  def build_annual_goal_page(year, j2_template: j2.Template):
+    return j2_template.render(year=year, areas_of_focus=AREAS_OF_FOCUS)
+
+  annual_template = j2_env.get_template('annual_goals.html.j2')
+  frame_template = j2_env.get_template('frame.html.j2')
+  annual_templates = {}
+
+  for year in range(start_year, end_year + 1):
+    content = build_annual_goal_page(year, annual_template)
+    annual_templates[str(year)] = frame_template.render(
+      content=content,
+      id=f'{year}-goals'
+    )
+
+  return annual_templates
+
+def build_monthly_goal_pages(start, end, j2_env: j2.Environment):
+  def build_monthly_goal_page(first, j2_template: j2.Template):
+    return j2_template.render(first=first, areas_of_focus=AREAS_OF_FOCUS)
+
+  annual_template = j2_env.get_template('monthly_goals.html.j2')
+  frame_template = j2_env.get_template('frame.html.j2')
+  monthly_templates = {}
+  cur_month = start + relativedelta(months=+0)
+
+
+  while cur_month < end:
+    content = build_monthly_goal_page(cur_month, annual_template)
+    monthly_templates[f"{cur_month.strftime('%Y-%m')}-goals"] = frame_template.render(
+      content=content,
+      id=f"{cur_month.strftime('%Y-%m')}-goals"
+    )
+    cur_month += relativedelta(months=+1)
+
+  return monthly_templates
 
 
 if __name__ == "__main__":
@@ -101,13 +167,19 @@ if __name__ == "__main__":
   start_time = datetime(2022, 12, 26, 7, 0, 0)
   end_time = datetime(2022, 12, 26, 19, 0, 0)
 
+  annuals = build_annual_pages(2023, 2023, env)
   months = build_monthly_pages(date(2023, 1, 1), date(2023, 3, 1), env)
   weeks = build_weekly_pages(start_date, end_date, start_time, end_time, env)
   days = build_daily_pages(start_date, end_date, start_time, end_time, env)
+  annual_goals = build_annual_goal_pages(2023, 2023, env)
+  monthly_goals = build_monthly_goal_pages(date(2023, 1, 1), date(2023, 3, 1), env)
 
-  pages = list(months.values())
+  pages = list(annuals.values())
+  pages.extend(list(months.values()))
   pages.extend(list(weeks.values()))
   pages.extend(list(days.values()))
+  pages.extend(list(annual_goals.values()))
+
   planner = build_planner(pages, env)
 
   with open('./dest/index.html', 'w') as fp:

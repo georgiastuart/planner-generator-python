@@ -1,0 +1,35 @@
+<div class="grid grid-cols-5 gap-4">
+  <div class="flex flex-col">
+    <div class="annual-title"><div class="mx-auto">{{ year }}</div></div>
+    {% for i in range(25) %}
+      <div class="border-b border-slate-800 h-5mm"></div>
+    {% endfor %}
+    </div>
+  <div class="col-span-4">
+    <div class="grid grid-cols-4 gap-x-8 gap-y-2">
+      {% for mini_cal in mini_cal_list %}
+      <div>
+      <div class="daily-heading"><div class="mx-auto">
+        <a href="#{{ mini_cal[0][6] }}">{{ mini_cal[0][5] }}</a>
+      </div></div>
+      <div class="grid grid-cols-7">
+          <div class="mini-cal-day">m</div>
+          <div class="mini-cal-day">t</div>
+          <div class="mini-cal-day">w</div>
+          <div class="mini-cal-day">t</div>
+          <div class="mini-cal-day">f</div>
+          <div class="mini-cal-day">s</div>
+          <div class="mini-cal-day">s</div>
+          {% for cal_date in mini_cal %}
+          {% if cal_date[2] %}
+          <div class="mini-cal-date"><a href="#{{ cal_date[1] }}">{{ cal_date[0] }}</a></div>
+          {% else %}
+          <div class="mini-cal-date text-slate-300"><a href="#{{ cal_date[1] }}">{{ cal_date[0] }}</a></div>
+          {% endif %}
+          {% endfor %}
+      </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>

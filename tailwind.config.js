@@ -17,6 +17,7 @@ module.exports = {
         'gn-landscape': '11.77in',
         '5mm': '10.4167mm',
         '10mm': '20.84mm',
+        '15mm': '31.25mm',
         '20mm': '41.6667mm',
         '25mm': '52.08mm'
       }

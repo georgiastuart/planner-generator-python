@@ -1,5 +1,10 @@
-<div class="w-gn-landscape max-h-gn-landscape break-after-page" id="{{ id }}">
+<div class="w-gn-landscape max-h-gn-landscape break-after-page relative" id="{{ id }}">
   <div class="m-6">
   {{ content|safe }}
   </div>
+  {% if goal_link %}
+  <div class="absolute bottom-0 right-0 text-slate-300 text-2xl pr-6">
+  <a href="#{{ goal_link }}"><i class="fa-solid fa-bullseye"></i></a>
+  </div>
+  {% endif %}
 </div>

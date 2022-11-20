@@ -1,5 +1,6 @@
 <div class="px-4 pb-4 border-b border-slate-800 text-6xl flex font-playfair font-bold">
-{{ date.strftime('%-d %B %Y').lower() }}
+<a class="pr-2" href="#{{ date.strftime('%Y-%m') }}">{{ date.strftime('%-d %B ').lower() }}</a>
+<a href="#{{ date.strftime('%Y') }}">{{ date.strftime('%Y').lower() }}</a>
 <span class="flex-grow inline-block"></span>
 <a href="#{{ date.strftime('%Y-W%W') }}">{{ date.strftime('week %-W, %A').lower() }}</a>
 </div>
