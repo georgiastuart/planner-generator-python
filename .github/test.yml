@@ -1,0 +1,47 @@
+name: Main
+
+on:
+  - push
+  - pull_request
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.9", "3.10"]
+        planner-args:
+          - {'args': "2022-11-01 2022-12-31 --file-suffix='-nov-dec-2022'", 'name': 'planner-nov-dec-2022.pdf'}
+          - {'args': "2022-11-01 2022-12-31 --no-work-goals --no-personal-goals --file-suffix='-nov-dec-2022-no-goals'", 'name': 'planner-nov-dec-2022-no-goals.pdf'}
+          - {'args': "2022-11-01 2022-12-31 --no-work-goals --file-suffix='-nov-dec-2022-no-work-goals'", 'name': 'planner-nov-dec-2022-no-work-goals.pdf'}
+          - {'args': "2022-11-01 2022-12-31 --no-daily-pages --file-suffix='-nov-dec-2022-no-daily'", 'name': 'planner-nov-dec-2022-no-daily.pdf'}
+          - {'args': "2022-11-01 2022-12-31 --no-daily-pages --no-work-goals --no-personal-goals --file-suffix='-nov-dec-2022-no-daily-no-goals'", 'name': 'planner-nov-dec-2022-no-daily-no-goals.pdf'}
+          - {'args': "2022-11-01 2022-12-31 --no-daily-pages --no-work-goals --no-personal-goals --file-suffix='-nov-dec-2022-no-daily-no-work-goals'", 'name': 'planner-nov-dec-2022-no-daily-no-work-goals.pdf'}
+          - {'args': "2022-11-01 2022-12-31 --no-weekly-pages --file-suffix='-nov-dec-2022-no-weekly'", 'name': 'planner-nov-dec-2022-no-weekly.pdf'}
+          - {'args': "2022-11-01 2022-12-31 --no-weekly-pages --no-work-goals --no-personal-goals --file-suffix='-nov-dec-2022-no-weekly-no-goals'", 'name': '-nov-dec-2022-no-weekly-no-goals.pdf'}
+          - {'args': "2022-11-01 2022-12-31 --no-weekly-pages --no-work-goals --no-personal-goals --file-suffix='-nov-dec-2022-no-weekly-no-work-goals'", 'name': 'planner-nov-dec-2022-no-weekly-no-work-goals.pdf'}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - name: Install node packages
+        run: npm install
+      - uses: conda-incubator/setup-miniconda@v2
+        with:
+          auto-update-conda: true 
+          python-version: ${{ matrix.python-version }}
+      - name: Install python dependencies
+        run: pip -y install Jinja2 playwright python-dateutil
+      - name: Install playwright browsers
+        run: playwright install
+      - name: Build planner pages 
+        run: npm run build -- ${{ matrix.planner-args.args }}
+      - name: Upload planner pdf to artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ matrix.planner-args.name }}
+          path: dest/${{ matrix.planner-args.name }}
