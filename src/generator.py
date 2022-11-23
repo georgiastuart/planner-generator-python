@@ -22,7 +22,7 @@ def generate_pdf(html_file, css_file, out_file):
     page = browser.new_page()
     page.goto(f"file://{abspath(html_file)}")
     page.add_style_tag(path=abspath(css_file))
-    page.pdf(path=abspath(out_file), width='18.83in', height='11.77in')
+    page.pdf(path=abspath(out_file), width='18.83in', height='11.77in', print_background=True)
     browser.close()
 
 def mini_calendar_dates(month, year):
