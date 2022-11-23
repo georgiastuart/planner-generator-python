@@ -1,7 +1,19 @@
 # Python Planner Generator
 
+![Test Builds](https://github.com/georgiastuart/planner-generator-python/actions/workflows/test.yml/badge.svg)
+
 This code creates a digital planner (maybe printable someday) for use with the
 iPad app goodnotes 5.
+
+## Features
+
+- An annual overview page with months, days, and optional personal / work goals hyperlinked.
+- Monthly pages with weeks, days, and optional personal / work goals hyperlinked.
+- Weekly pages with the month, days, and optional personal / work goals hyperlinked.
+- Daily pages with a hyperlinked mini calendar and week.
+- Annual/Monthly/Weekly personal goals (hyperlinked on each page with the target symbol in the bottom right corner).
+- Monthly/Weekly work goals (hyperlinked with briefcase symbol in bottom right corner of monthly/weekly pages).
+- Lots of hyperlinking. If it seems like it should direct to another page, it probably does.
 
 ## Prerequisites 
 
