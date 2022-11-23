@@ -1,6 +1,7 @@
 # Python Planner Generator
 
-![Test Builds](https://github.com/georgiastuart/planner-generator-python/actions/workflows/test.yml/badge.svg)
+![GitHub branch checks state](https://img.shields.io/github/checks-status/georgiastuart/planner-generator-python/main)
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/georgiastuart/planner-generator-python)
 
 This code creates a digital planner (maybe printable someday) for use with the
 iPad app goodnotes 5.
