@@ -19,7 +19,7 @@ jobs:
           - {'args': "2022-11-01 2022-12-31 --no-daily-pages --no-work-goals --no-personal-goals --file-suffix='-nov-dec-2022-no-daily-no-goals'", 'name': 'planner-nov-dec-2022-no-daily-no-goals.pdf'}
           - {'args': "2022-11-01 2022-12-31 --no-daily-pages --no-work-goals --no-personal-goals --file-suffix='-nov-dec-2022-no-daily-no-work-goals'", 'name': 'planner-nov-dec-2022-no-daily-no-work-goals.pdf'}
           - {'args': "2022-11-01 2022-12-31 --no-weekly-pages --file-suffix='-nov-dec-2022-no-weekly'", 'name': 'planner-nov-dec-2022-no-weekly.pdf'}
-          - {'args': "2022-11-01 2022-12-31 --no-weekly-pages --no-work-goals --no-personal-goals --file-suffix='-nov-dec-2022-no-weekly-no-goals'", 'name': '-nov-dec-2022-no-weekly-no-goals.pdf'}
+          - {'args': "2022-11-01 2022-12-31 --no-weekly-pages --no-work-goals --no-personal-goals --file-suffix='-nov-dec-2022-no-weekly-no-goals'", 'name': 'planner-nov-dec-2022-no-weekly-no-goals.pdf'}
           - {'args': "2022-11-01 2022-12-31 --no-weekly-pages --no-work-goals --no-personal-goals --file-suffix='-nov-dec-2022-no-weekly-no-work-goals'", 'name': 'planner-nov-dec-2022-no-weekly-no-work-goals.pdf'}
     steps:
       - name: Checkout
