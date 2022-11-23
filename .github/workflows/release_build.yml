@@ -1,14 +1,14 @@
 name: Release Build Configurations
 
-# on:
-#   push:
-#     tags:
-#       - "v*.*.*"
-#     branches:
-#       - "main"
+on:
+  push:
+    tags:
+      - "v*.*.*"
+    branches:
+      - "main"
 
-on: 
-  - push
+# on: 
+#   - push
 
 jobs:
   build:
@@ -20,11 +20,11 @@ jobs:
         date-ranges: 
           - {arg: "2023-01-01 2023-12-31", suffix: "2023"}
           - {arg: "2023-01-01 2023-03-31", suffix: "2023-Q1"}
-          - {arg: "2023-04-01 2023-06-30", suffix: "2023-Q2"}
-          - {arg: "2023-07-01 2023-09-30", suffix: "2023-Q3"}
-          - {arg: "2023-10-01 2023-12-31", suffix: "2023-Q4"}
-          - {arg: "2022-07-01 2023-06-30", suffix: "2022-2023-academic"}  
-          - {arg: "2023-07-01 2024-06-30", suffix: "2023-2024-academic"}  
+          # - {arg: "2023-04-01 2023-06-30", suffix: "2023-Q2"}
+          # - {arg: "2023-07-01 2023-09-30", suffix: "2023-Q3"}
+          # - {arg: "2023-10-01 2023-12-31", suffix: "2023-Q4"}
+          # - {arg: "2022-07-01 2023-06-30", suffix: "2022-2023-academic"}  
+          # - {arg: "2023-07-01 2024-06-30", suffix: "2023-2024-academic"}  
         personal-goals: [{arg: "--personal-goals", suffix: ""}, {arg: "--no-personal-goals", suffix: "-no-personal-goals"}]
         work-goals: [{arg: "--work-goals", suffix: ""}, {arg: "--no-work-goals", suffix: "-no-work-goals"}]
         daily-pages: [{arg: "--daily-pages", suffix: ""}, {arg: "--no-daily-pages", suffix: "-no-daily"}]
@@ -60,5 +60,7 @@ jobs:
       - name: Download planners 
         uses: actions/download-artifact@v3  
         id: download
-      - name: Get list of all artifacts in directory
-        run: find ${{steps.download.outputs.download-path}} -type f *.pdf
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: ${{steps.download.outputs.download-path}}/**/*.pdf
