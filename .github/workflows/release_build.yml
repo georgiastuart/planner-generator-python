@@ -1,0 +1,63 @@
+name: Release Build Configurations
+
+# on:
+#   push:
+#     tags:
+#       - "v*.*.*"
+#     branches:
+#       - "main"
+
+on: 
+  - push
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10"]
+        date-ranges: 
+          - {arg: "2023-01-01 2023-12-31", suffix: "2023"}
+          - {arg: "2023-01-01 2023-03-31", suffix: "2023-Q1"}
+          - {arg: "2023-04-01 2023-06-30", suffix: "2023-Q2"}
+          - {arg: "2023-07-01 2023-09-30", suffix: "2023-Q3"}
+          - {arg: "2023-10-01 2023-12-31", suffix: "2023-Q4"}
+          - {arg: "2022-07-01 2023-06-30", suffix: "2022-2023-academic"}  
+          - {arg: "2023-07-01 2024-06-30", suffix: "2023-2024-academic"}  
+        personal-goals: [{arg: "--personal-goals", suffix: ""}, {arg: "--no-personal-goals", suffix: "-no-personal-goals"}]
+        work-goals: [{arg: "--work-goals", suffix: ""}, {arg: "--no-work-goals", suffix: "-no-work-goals"}]
+        daily-pages: [{arg: "--daily-pages", suffix: ""}, {arg: "--no-daily-pages", suffix: "-no-daily"}]
+        weekly-pages: [{arg: "--weekly-pages", suffix: ""}, {arg: "--no-weekly-pages", suffix: "-no-weekly"}]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - name: Install node packages
+        run: npm install
+      - uses: conda-incubator/setup-miniconda@v2
+        with:
+          auto-update-conda: true 
+          python-version: ${{ matrix.python-version }}
+      - name: Install python dependencies
+        run: yes | pip install Jinja2 playwright python-dateutil
+      - name: Install playwright browsers
+        run: playwright install
+      - name: Build planner pages 
+        run: npm run build -- ${{ matrix.date-ranges.arg }} ${{ matrix.personal-goals.arg }} ${{ matrix.work-goals.arg }} ${{ matrix.daily-pages.arg }} ${{ matrix.weekly-pages.arg }} --file-suffix="-${{ matrix.date-ranges.suffix }}${{ matrix.daily-pages.suffix }}${{ matrix.weekly-pages.suffix }}${{ matrix.personal-goals.suffix }}${{ matrix.work-goals.suffix }}"
+      - name: Upload planner pdf to artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: planner-${{ matrix.date-ranges.suffix }}${{ matrix.daily-pages.suffix }}${{ matrix.weekly-pages.suffix }}${{ matrix.personal-goals.suffix }}${{ matrix.work-goals.suffix }}.pdf
+          path: dest/planner-${{ matrix.date-ranges.suffix }}${{ matrix.daily-pages.suffix }}${{ matrix.weekly-pages.suffix }}${{ matrix.personal-goals.suffix }}${{ matrix.work-goals.suffix }}.pdf
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download planners 
+        uses: actions/download-artifact@v3  
+        id: download
+      - name: Get list of all artifacts in directory
+        run: find ${{steps.download.outputs.download-path}} -type f *.pdf
