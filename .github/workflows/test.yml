@@ -23,7 +23,7 @@ jobs:
           - {'args': "2022-11-01 2022-12-31 --no-weekly-pages --no-work-goals --no-personal-goals --file-suffix='-nov-dec-2022-no-weekly-no-work-goals'", 'name': 'planner-nov-dec-2022-no-weekly-no-work-goals.pdf'}
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Setup node
         uses: actions/setup-node@v3
         with:
