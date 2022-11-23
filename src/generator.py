@@ -1,6 +1,9 @@
 import jinja2 as j2
 from datetime import date, timedelta, datetime
 from dateutil.relativedelta import relativedelta
+from playwright.sync_api import sync_playwright
+from os.path import abspath
+from argparse import ArgumentParser
 
 AREAS_OF_FOCUS = [
   ('Personal Growth', 'fa-solid fa-brain'),
@@ -8,6 +11,19 @@ AREAS_OF_FOCUS = [
   ('Health & Wellness', 'fa-solid fa-dumbbell'),
   ('Household Management', 'fa-solid fa-house'),
 ]
+
+def generate_html(planner_html, out_file):
+  with open(out_file, 'w') as fp:
+    fp.write(planner_html)
+
+def generate_pdf(html_file, css_file, out_file):
+  with sync_playwright() as p:
+    browser = p.chromium.launch()
+    page = browser.new_page()
+    page.goto(f"file://{abspath(html_file)}")
+    page.add_style_tag(path=abspath(css_file))
+    page.pdf(path=abspath(out_file), width='18.83in', height='11.77in')
+    browser.close()
 
 def mini_calendar_dates(month, year):
   first_day = date(year, month, 1)
@@ -219,30 +235,38 @@ def build_weekly_work_goal_pages(start, end, j2_env: j2.Environment):
   return weekly_templates
 
 if __name__ == "__main__":
+  parser = ArgumentParser(prog='Python Planner Generator',
+                          description='GoodNotes 5 Optimized PDF Planner')
+
+  parser.add_argument('start', help='Start date in YYYY-MM-DD format')
+  parser.add_argument('end', help='End date in YYYY-MM-DD format')
+  parser.add_argument('--start-time', default=7, help='Start hour for daily agenda (24 hour time)')
+  parser.add_argument('--end-time', default=19, help='End hour for daily agenda (24 hour time)')
+  parser.add_argument('--file-suffix', default='', help='Suffix to add to output file names')
+
+  args = parser.parse_args()
+
+
   env = j2.Environment(
     loader=j2.FileSystemLoader('./src/templates')
   )
 
-  start_date = date(2022, 10, 31)
-  end_date = date(2023, 1, 1)
+  # start_date = date(2022, 10, 31)
+  # end_date = date(2023, 1, 1)
+  start_date = date.fromisoformat(args.start)
+  end_date = date.fromisoformat(args.end)
 
-  month_start = date(2022, 11, 1)
-  month_end = date(2022, 12, 1)
+  start_time = datetime(2022, 12, 26, args.start_time, 0, 0)
+  end_time = datetime(2022, 12, 26, args.end_time, 0, 0)
 
-  start_time = datetime(2022, 12, 26, 7, 0, 0)
-  end_time = datetime(2022, 12, 26, 19, 0, 0)
-
-  year_start = 2022
-  year_end = 2022
-
-  annuals = build_annual_pages(year_start, year_end, env)
-  months = build_monthly_pages(month_start, month_end, env)
+  annuals = build_annual_pages(start_date.year, end_date.year, env)
+  months = build_monthly_pages(start_date, end_date, env)
   weeks = build_weekly_pages(start_date, end_date, start_time, end_time, env)
   days = build_daily_pages(start_date, end_date, start_time, end_time, env)
-  annual_goals = build_annual_goal_pages(year_start, year_end, env)
-  monthly_goals = build_monthly_goal_pages(month_start, month_end, env)
+  annual_goals = build_annual_goal_pages(start_date.year, end_date.year, env)
+  monthly_goals = build_monthly_goal_pages(start_date, end_date, env)
   weekly_goals = build_weekly_goal_pages(start_date, end_date, env)
-  monthly_work_goals = build_monthly_work_goal_pages(month_start, month_end, env)
+  monthly_work_goals = build_monthly_work_goal_pages(start_date, end_date, env)
   weekly_work_goals = build_weekly_work_goal_pages(start_date, end_date, env)
 
 
@@ -258,5 +282,5 @@ if __name__ == "__main__":
 
   planner = build_planner(pages, env)
 
-  with open('./dest/index.html', 'w') as fp:
-    fp.write(planner)
+  generate_html(planner, f'./dest/index{args.file_suffix}.html')
+  generate_pdf(f'dest/index{args.file_suffix}.html', f'dest/main.css', f'dest/planner{args.file_suffix}.pdf')
