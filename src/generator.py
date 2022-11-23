@@ -211,7 +211,8 @@ def build_weekly_goal_pages(start, end, j2_env: j2.Environment):
   weekly_template = j2_env.get_template('weekly_goals.html.j2')
   frame_template = j2_env.get_template('frame.html.j2')
   weekly_templates = {}
-  cur_week = start + relativedelta(weeks=+0)
+  preceding_monday = start - timedelta(days=start.weekday())
+  cur_week = preceding_monday + relativedelta(weeks=+0)
 
 
   while cur_week < end:
@@ -251,7 +252,8 @@ def build_weekly_work_goal_pages(start, end, j2_env: j2.Environment):
   weekly_template = j2_env.get_template('weekly_work_goals.html.j2')
   frame_template = j2_env.get_template('frame.html.j2')
   weekly_templates = {}
-  cur_week = start + relativedelta(weeks=+0)
+  preceding_monday = start - timedelta(days=start.weekday())
+  cur_week = preceding_monday + relativedelta(weeks=+0)
 
 
   while cur_week < end:
