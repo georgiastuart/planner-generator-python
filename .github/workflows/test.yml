@@ -35,7 +35,7 @@ jobs:
           auto-update-conda: true 
           python-version: ${{ matrix.python-version }}
       - name: Install python dependencies
-        run: pip -y install Jinja2 playwright python-dateutil
+        run: yes | pip install Jinja2 playwright python-dateutil
       - name: Install playwright browsers
         run: playwright install
       - name: Build planner pages 
