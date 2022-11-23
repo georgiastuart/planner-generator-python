@@ -35,6 +35,22 @@ iPad app goodnotes 5.
 
 ![Daily view](https://user-images.githubusercontent.com/8276147/203629772-3317b5e0-ee10-425d-b1a4-c175b2050454.png)
 
+#### Monthly personal goals
+
+![Monthly personal goals](https://user-images.githubusercontent.com/8276147/203632411-63bc909a-2687-4a4e-825c-27084cdf25fd.png)
+
+#### Weekly personal goals
+
+![Weekly personal goals](https://user-images.githubusercontent.com/8276147/203632731-09e8f814-845d-42ab-82c5-07b39fbb858c.png)
+
+#### Monthly work goals
+
+![Monthly work goals](https://user-images.githubusercontent.com/8276147/203632843-0e60341f-3373-4653-9fc5-46cbc9f1e098.png)
+
+#### Weekly work goals
+
+![Weekly work goals](https://user-images.githubusercontent.com/8276147/203632936-8860454b-5de8-4c1d-9826-5b426bd2bee1.png)
+
 ## Using the generator locally
 
 ### Prerequisites 
