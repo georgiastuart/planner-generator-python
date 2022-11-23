@@ -34,9 +34,7 @@ jobs:
       - name: Install playwright browsers
         run: playwright install
       - name: Build planner pages 
-        run: npm run build -- ${{ matrix.date-ranges.arg }} ${{ matrix.personal-goals.arg }} \
-         ${{ matrix.work-goals.arg }} ${{ matrix.daily-pages.arg }} ${{ matrix.weekly-pages.arg }} \
-         --file-suffix="-${{ matrix.date-ranges.suffix }}${{ matrix.daily-pages.suffix }}${{ matrix.weekly-ages.suffix }}${{ matrix.personal-goals.suffix }}${{ matrix.work-goals.suffix }}"
+        run: npm run build -- ${{ matrix.date-ranges.arg }} ${{ matrix.personal-goals.arg }} ${{ matrix.work-goals.arg }} ${{ matrix.daily-pages.arg }} ${{ matrix.weekly-pages.arg }} --file-suffix="-${{ matrix.date-ranges.suffix }}${{ matrix.daily-pages.suffix }}${{ matrix.weekly-ages.suffix }}${{ matrix.personal-goals.suffix }}${{ matrix.work-goals.suffix }}"
       - name: Upload planner pdf to artifacts
         uses: actions/upload-artifact@v3
         with:
