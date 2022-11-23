@@ -54,6 +54,7 @@ jobs:
           name: planner-${{ matrix.date-ranges.suffix }}${{ matrix.daily-pages.suffix }}${{ matrix.weekly-pages.suffix }}${{ matrix.personal-goals.suffix }}${{ matrix.work-goals.suffix }}.pdf
           path: dest/planner-${{ matrix.date-ranges.suffix }}${{ matrix.daily-pages.suffix }}${{ matrix.weekly-pages.suffix }}${{ matrix.personal-goals.suffix }}${{ matrix.work-goals.suffix }}.pdf
   deploy:
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - name: Download planners 
