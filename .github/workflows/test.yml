@@ -10,7 +10,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.9", "3.10"]
+        python-version: ["3.10"]
         planner-args:
           - {'args': "2022-11-01 2022-12-31 --file-suffix='-nov-dec-2022'", 'name': 'planner-nov-dec-2022.pdf'}
           - {'args': "2022-11-01 2022-12-31 --no-work-goals --no-personal-goals --file-suffix='-nov-dec-2022-no-goals'", 'name': 'planner-nov-dec-2022-no-goals.pdf'}
