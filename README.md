@@ -1,6 +1,6 @@
 # Python Planner Generator
 
-![GitHub branch checks state](https://img.shields.io/github/checks-status/georgiastuart/planner-generator-python/main)
+![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/georgiastuart/planner-generator-python/Test%20Build%20Configurations/main)
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/georgiastuart/planner-generator-python)
 
 This code creates a digital planner (maybe printable someday) for use with the
