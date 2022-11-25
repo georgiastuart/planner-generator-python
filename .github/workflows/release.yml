@@ -24,6 +24,11 @@ jobs:
         work-goals: [{arg: "--work-goals", suffix: ""}, {arg: "--no-work-goals", suffix: "-no-work-goals"}]
         daily-pages: [{arg: "--daily-pages", suffix: ""}, {arg: "--no-daily-pages", suffix: "-no-daily"}]
         weekly-pages: [{arg: "--weekly-pages", suffix: ""}, {arg: "--no-weekly-pages", suffix: "-no-weekly"}]
+        journal-pages: 
+          - {arg: "--journals-per-page=0", suffix: ""}
+          - {arg: "--journals-per-page=1", suffix: "-full-pg-journal"}
+          - {arg: "--journals-per-page=2", suffix: "-half-pg-journal"}
+          - {arg: "--journals-per-page=4", suffix: "-quarter-pg-journal"}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -42,12 +47,12 @@ jobs:
       - name: Install playwright browsers
         run: playwright install
       - name: Build planner pages 
-        run: npm run build -- ${{ matrix.date-ranges.arg }} ${{ matrix.personal-goals.arg }} ${{ matrix.work-goals.arg }} ${{ matrix.daily-pages.arg }} ${{ matrix.weekly-pages.arg }} --file-suffix="-${{ matrix.date-ranges.suffix }}${{ matrix.daily-pages.suffix }}${{ matrix.weekly-pages.suffix }}${{ matrix.personal-goals.suffix }}${{ matrix.work-goals.suffix }}"
+        run: npm run build -- ${{ matrix.date-ranges.arg }} ${{ matrix.personal-goals.arg }} ${{ matrix.work-goals.arg }} ${{ matrix.daily-pages.arg }} ${{ matrix.weekly-pages.arg }} ${{ matrix.journal-pages.arg }} --file-suffix="-${{ matrix.date-ranges.suffix }}${{ matrix.daily-pages.suffix }}${{ matrix.weekly-pages.suffix }}${{ matrix.personal-goals.suffix }}${{ matrix.work-goals.suffix }}${{ matrix.journal-pages.suffix }}"
       - name: Upload planner pdf to artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: planner-${{ matrix.date-ranges.suffix }}${{ matrix.daily-pages.suffix }}${{ matrix.weekly-pages.suffix }}${{ matrix.personal-goals.suffix }}${{ matrix.work-goals.suffix }}.pdf
-          path: dest/planner-${{ matrix.date-ranges.suffix }}${{ matrix.daily-pages.suffix }}${{ matrix.weekly-pages.suffix }}${{ matrix.personal-goals.suffix }}${{ matrix.work-goals.suffix }}.pdf
+          name: planner-${{ matrix.date-ranges.suffix }}${{ matrix.daily-pages.suffix }}${{ matrix.weekly-pages.suffix }}${{ matrix.personal-goals.suffix }}${{ matrix.work-goals.suffix }}${{ matrix.journal-pages.suffix }}.pdf
+          path: dest/planner-${{ matrix.date-ranges.suffix }}${{ matrix.daily-pages.suffix }}${{ matrix.weekly-pages.suffix }}${{ matrix.personal-goals.suffix }}${{ matrix.work-goals.suffix }}${{ matrix.journal-pages.suffix }}.pdf
   deploy:
     needs: build
     runs-on: ubuntu-latest

@@ -1,0 +1,45 @@
+<div>
+  {% if journals_per_page == 1 %}
+    <div class="grid grid-cols-2 gap-4">
+      <div class="flex flex-col" id="{{ days[0].strftime('%Y-%m-%d-journal') }}">
+        <div class="h-10mm pl-4 flex items-end">
+          <div class="text-4xl font-playfair font-bold flex justify-between flex-grow pb-2 items-end">
+            <a href="#{{ days[0].strftime('%Y-%m-%d')}}">{{ days[0].strftime('%-d %B %Y, %A').lower() }}</a>
+            <a href="#{{ days[0].strftime('%Y-W%W')}}">{{ days[0].strftime('W%-W').lower() }}</a>
+          </div>
+        </div>
+        <div class="border-y border-slate-800 h-5mm flex items-center">
+          {% include "snippets/journal_icons.html" %}
+        </div>
+        {% for i in range(lines[journals_per_page]) %}
+        <div class="border-b border-slate-800 h-5mm"></div>
+        {% endfor %}
+      </div>
+      <div>
+        <div class="h-5mm"></div>
+        {% for i in range(lines[journals_per_page] + 2) %}
+        <div class="border-b border-slate-800 h-5mm"></div>
+        {% endfor %}
+      </div>
+    </div>
+  {% elif journals_per_page == 2 or journals_per_page == 4 %}
+    <div class="grid grid-cols-2 gap-4">
+      {% for day in days %}
+        <div class="flex flex-col" id="{{ day.strftime('%Y-%m-%d-journal') }}">
+          <div class="h-10mm pl-4 flex items-end">
+            <div class="text-4xl font-playfair font-bold flex justify-between flex-grow pb-2 items-end">
+              <a href="#{{ day.strftime('%Y-%m-%d')}}">{{ day.strftime('%-d %B %Y, %A').lower() }}</a>
+              <a href="#{{ day.strftime('%Y-W%W')}}">{{ day.strftime('W%-W').lower() }}</a>
+            </div>
+          </div>
+          <div class="border-y border-slate-800 h-5mm flex items-center">
+            {% include "snippets/journal_icons.html" %}
+          </div>
+          {% for i in range(lines[journals_per_page]) %}
+          <div class="border-b border-slate-800 h-5mm"></div>
+          {% endfor %}
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+</div>

@@ -3,6 +3,9 @@
   {{ content|safe }}
   </div>
   <div class="absolute bottom-0 right-0 text-slate-300 text-2xl pr-6">  
+  {% if journal_link %}
+  <a href="#{{ journal_link }}"><i class="fa-solid fa-book pl-2"></i></a>
+  {% endif %}
   {% if goal_link %}
   <a href="#{{ goal_link }}"><i class="fa-solid fa-bullseye pl-2"></i></a>
   {% endif %}
