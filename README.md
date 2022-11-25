@@ -14,6 +14,7 @@ iPad app goodnotes 5.
 - Daily pages with a hyperlinked mini calendar and week.
 - Annual/Monthly/Weekly personal goals (hyperlinked on each page with the target symbol in the bottom right corner).
 - Monthly/Weekly work goals (hyperlinked with briefcase symbol in bottom right corner of monthly/weekly pages).
+- Journal pages that can be a full page, half page, or quarter page.
 - Lots of hyperlinking. If it seems like it should direct to another page, it probably does.
 
 ### Screen shots
@@ -88,8 +89,8 @@ technique, set margins to none and enable background images.
 #### Optional Arguments 
 
 ```
-usage: Python Planner Generator [-h] [--start-time START_TIME] [--end-time END_TIME] [--file-suffix FILE_SUFFIX] [--work-goals | --no-work-goals]
-                                [--personal-goals | --no-personal-goals] [--daily-pages | --no-daily-pages] [--weekly-pages | --no-weekly-pages]
+usage: Python Planner Generator [-h] [--start-time START_TIME] [--end-time END_TIME] [--file-suffix FILE_SUFFIX] [--work-goals | --no-work-goals] [--personal-goals | --no-personal-goals]
+                                [--daily-pages | --no-daily-pages] [--weekly-pages | --no-weekly-pages] [--journals-per-page {0,1,2,4}]
                                 start end
 
 GoodNotes 5 Optimized PDF Planner
@@ -109,4 +110,5 @@ options:
   --personal-goals, --no-personal-goals
   --daily-pages, --no-daily-pages
   --weekly-pages, --no-weekly-pages
+  --journals-per-page {0,1,2,4}
 ```
