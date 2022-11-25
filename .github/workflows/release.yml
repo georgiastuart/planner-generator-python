@@ -26,6 +26,7 @@ jobs:
         weekly-pages: [{arg: "--weekly-pages", suffix: ""}, {arg: "--no-weekly-pages", suffix: "-no-weekly"}]
         journal-pages: 
           - {arg: "--journals-per-page=0", suffix: ""}
+          - {arg: "--journals-per-page=1", suffix: "-full-pg-journal"}
           - {arg: "--journals-per-page=2", suffix: "-half-pg-journal"}
           - {arg: "--journals-per-page=4", suffix: "-quarter-pg-journal"}
     steps:

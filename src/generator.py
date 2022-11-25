@@ -288,7 +288,7 @@ def build_daily_journal(start: date, end: date, journals_per_page: int, j2_env: 
     days = []
     for i in range(journals_per_page):
       days.append(inp_date + timedelta(days=i))
-    return j2_template.render(days=days, journals_per_page=journals_per_page, lines={2: 24, 4: 10})
+    return j2_template.render(days=days, journals_per_page=journals_per_page, lines={1: 24, 2: 24, 4: 10})
 
   num_days = (end - start).days
   journal_templates = {}
