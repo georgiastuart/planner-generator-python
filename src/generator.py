@@ -92,6 +92,7 @@ def build_weekly_pages(start: date, end: date, start_t: datetime, end_t: datetim
 
   goal_link = False
   work_goal_link = False
+  journal_link = False
 
   while cur_monday < end:
     if goals['work']:
