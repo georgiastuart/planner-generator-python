@@ -51,6 +51,10 @@ iPad app goodnotes 5.
 
 ![Weekly work goals](https://user-images.githubusercontent.com/8276147/203632936-8860454b-5de8-4c1d-9826-5b426bd2bee1.png)
 
+#### Journal pages
+
+![Quarter sized pages](https://user-images.githubusercontent.com/8276147/204024505-c29a0b34-8696-42ab-adcd-89d52204c3bb.png)
+
 ## Using the generator locally
 
 ### Prerequisites 
