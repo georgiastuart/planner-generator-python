@@ -45,7 +45,7 @@ def build_planner(pages, j2_env: j2.Environment):
   return j2_env.get_template('full_planner.html.j2') \
                .render(pages=pages)
 
-def build_daily_pages(start: date, end: date, start_t: datetime, end_t: datetime, j2_env: j2.Environment):
+def build_daily_pages(start: date, end: date, start_t: datetime, end_t: datetime, goals, j2_env: j2.Environment):
   def build_daily_page(inp_date, j2_template: j2.Template, times):
     mini_cal = mini_calendar_dates(inp_date.month, inp_date.year)
     return j2_template.render(date=inp_date, times=times, mini_cal=mini_cal)
@@ -58,17 +58,24 @@ def build_daily_pages(start: date, end: date, start_t: datetime, end_t: datetime
 
   times = [(start_t + timedelta(hours=i)).strftime('%-I %p').lower() for i in range(num_hours)]
 
+  journal_link = False
+
   for i in range(num_days + 1):
     cur_date = start + timedelta(days=i)
+
+    if goals['journal'] > 0:
+      journal_link = cur_date.strftime('%Y-%m-%d-journal')
+
     content = build_daily_page(cur_date, daily_template, times)
     day_templates[cur_date.strftime('%Y-%m-%d')] = frame_template.render(
       content=content,
-      id=cur_date.strftime('%Y-%m-%d')
+      id=cur_date.strftime('%Y-%m-%d'),
+      journal_link=journal_link
     )
 
   return day_templates
 
-def build_weekly_pages(start: date, end: date, start_t: datetime, end_t: datetime, work_goals: bool, personal_goals: bool, j2_env: j2.Environment):
+def build_weekly_pages(start: date, end: date, start_t: datetime, end_t: datetime, goals, j2_env: j2.Environment):
   def build_weekly_page(inp_monday, j2_template: j2.Template, times):
     days = []
     for i in range(7):
@@ -87,24 +94,28 @@ def build_weekly_pages(start: date, end: date, start_t: datetime, end_t: datetim
   work_goal_link = False
 
   while cur_monday < end:
-    if work_goals:
+    if goals['work']:
       work_goal_link = f"{cur_monday.strftime('%Y-W%W')}-work-goals"
 
-    if personal_goals:
+    if goals['personal']:
       goal_link = f"{cur_monday.strftime('%Y-W%W')}-goals"
+
+    if goals['journal'] > 0:
+      journal_link = f"{max(cur_monday, start).strftime('%Y-%m-%d')}-journal"
 
     content = build_weekly_page(cur_monday, weekly_template, times)
     week_templates[cur_monday.strftime('%Y-W%W')] = frame_template.render(
       content=content,
       id=cur_monday.strftime('%Y-W%W'),
       goal_link=goal_link,
-      work_goal_link=work_goal_link
+      work_goal_link=work_goal_link,
+      journal_link=journal_link
     )
     cur_monday += timedelta(days=7)
 
   return week_templates
 
-def build_monthly_pages(start: date, end: date, work_goals: bool, personal_goals: bool, j2_env: j2.Environment):
+def build_monthly_pages(start: date, end: date, goals, j2_env: j2.Environment):
   def build_monthly_page(cur_month, j2_template: j2.Template):
     return j2_template.render(month=cur_month, mini_cal=mini_calendar_dates(cur_month.month, cur_month.year)) 
 
@@ -115,26 +126,31 @@ def build_monthly_pages(start: date, end: date, work_goals: bool, personal_goals
 
   work_goal_link = False
   goal_link = False
+  journal_link = False
 
   while cur_month <= end:
-    if work_goals:
+    if goals['work']:
       work_goal_link = f"{cur_month.strftime('%Y-%m')}-work-goals"
 
-    if personal_goals:
+    if goals['personal']:
       goal_link = f"{cur_month.strftime('%Y-%m')}-goals"
+    
+    if goals['journal'] > 0:
+      journal_link = f"{cur_month.strftime('%Y-%m-%d-journal')}"
       
     content = build_monthly_page(cur_month, monthly_template)
     month_templates[cur_month.strftime('%Y-%m')] = frame_template.render(
       content=content,
       id=cur_month.strftime('%Y-%m'),
       goal_link=goal_link,
-      work_goal_link=work_goal_link
+      work_goal_link=work_goal_link,
+      journal_link=journal_link
     )
     cur_month += relativedelta(months=+1)
 
   return month_templates
 
-def build_annual_pages(start_year, end_year, work_goals: bool, personal_goals: bool, j2_env: j2.Environment):
+def build_annual_pages(start_year, end_year, goals, j2_env: j2.Environment):
   def build_annual_page(year, j2_template: j2.Template):
     mini_cal_list = []
     for i in range(12):
@@ -149,12 +165,12 @@ def build_annual_pages(start_year, end_year, work_goals: bool, personal_goals: b
   goal_link = False
 
   for year in range(start_year, end_year + 1):
-    if work_goals:
+    if goals['work']:
       # placeholder for when annual goals are implemented
       # work_goal_link = f'{year}-work-goals'
       work_goal_link = False
 
-    if personal_goals: 
+    if goals['personal']: 
       goal_link = f'{year}-goals'
 
     content = build_annual_page(year, annual_template)
@@ -266,6 +282,28 @@ def build_weekly_work_goal_pages(start, end, j2_env: j2.Environment):
 
   return weekly_templates
 
+def build_daily_journal(start: date, end: date, journals_per_page: int, j2_env: j2.Environment):
+  def build_journal_page(inp_date, j2_template: j2.Template):
+    days = []
+    for i in range(journals_per_page):
+      days.append(inp_date + timedelta(days=i))
+    return j2_template.render(days=days, journals_per_page=journals_per_page, lines={2: 24, 4: 10})
+
+  num_days = (end - start).days
+  journal_templates = {}
+  daily_template = j2_env.get_template('journal_pages.html.j2')
+  frame_template = j2_env.get_template('frame.html.j2')
+
+  for i in range(0, num_days + 1, journals_per_page):
+    cur_date = start + timedelta(days=i)
+    content = build_journal_page(cur_date, daily_template)
+    journal_templates[cur_date.strftime('%Y-%m-%d-journal-page')] = frame_template.render(
+      content=content,
+      id=cur_date.strftime('%Y-%m-%d-journal-page')
+    )
+
+  return journal_templates
+
 if __name__ == "__main__":
   parser = ArgumentParser(prog='Python Planner Generator',
                           description='GoodNotes 5 Optimized PDF Planner')
@@ -279,6 +317,7 @@ if __name__ == "__main__":
   parser.add_argument('--personal-goals', action=BooleanOptionalAction, default=True)
   parser.add_argument('--daily-pages', action=BooleanOptionalAction, default=True) 
   parser.add_argument('--weekly-pages', action=BooleanOptionalAction, default=True) 
+  parser.add_argument('--journals-per-page', default=0, type=int, choices=[0, 1, 2, 4])
 
   args = parser.parse_args()
 
@@ -295,16 +334,22 @@ if __name__ == "__main__":
   start_time = datetime(2022, 12, 26, args.start_time, 0, 0)
   end_time = datetime(2022, 12, 26, args.end_time, 0, 0)
 
+  goals = {
+    'work': args.work_goals,
+    'personal': args.personal_goals,
+    'journal': args.journals_per_page
+  }
+
   pages = []
 
-  pages.extend(build_annual_pages(start_date.year, end_date.year, args.work_goals, args.personal_goals, env).values())
-  pages.extend(build_monthly_pages(start_date, end_date, args.work_goals, args.personal_goals, env).values())
+  pages.extend(build_annual_pages(start_date.year, end_date.year, goals, env).values())
+  pages.extend(build_monthly_pages(start_date, end_date, goals, env).values())
 
   if args.weekly_pages:
-    pages.extend(build_weekly_pages(start_date, end_date, start_time, end_time, args.work_goals, args.personal_goals, env).values())
+    pages.extend(build_weekly_pages(start_date, end_date, start_time, end_time, goals, env).values())
 
   if args.daily_pages:
-    pages.extend(build_daily_pages(start_date, end_date, start_time, end_time, env).values())
+    pages.extend(build_daily_pages(start_date, end_date, start_time, end_time, goals, env).values())
 
   if args.personal_goals:
     pages.extend(build_annual_goal_pages(start_date.year, end_date.year, env).values())
@@ -318,6 +363,9 @@ if __name__ == "__main__":
 
     if args.weekly_pages:
       pages.extend(build_weekly_work_goal_pages(start_date, end_date, env).values())
+
+  if args.journals_per_page > 0:
+    pages.extend(build_daily_journal(start_date, end_date, args.journals_per_page, env).values())
 
   planner = build_planner(pages, env)
 
