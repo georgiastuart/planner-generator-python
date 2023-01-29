@@ -48,12 +48,12 @@ jobs:
       - name: Install playwright browsers
         run: playwright install
       - name: Build planner pages 
-        run: npm run build -- ${{ matrix.date-ranges.arg }} ${{ matrix.personal-goals.arg }} ${{ matrix.work-goals.arg }} ${{ matrix.daily-pages.arg }} ${{ matrix.weekly-pages.arg }} ${{ matrix.journal-pages.arg }} --file-suffix="-${{ matrix.date-ranges.suffix }}${{ matrix.daily-pages.suffix }}${{ matrix.weekly-pages.suffix }}${{ matrix.personal-goals.suffix }}${{ matrix.work-goals.suffix }}${{ matrix.journal-pages.suffix }}"
+        run: npm run build -- ${{ matrix.date-ranges.arg }} ${{ matrix.personal-goals.arg }} ${{ matrix.work-goals.arg }} ${{ matrix.daily-pages.arg }} ${{ matrix.weekly-pages.arg }} ${{ matrix.journal-pages.arg }} ${{ matrix.dark-mode.arg }} --file-suffix="-${{ matrix.date-ranges.suffix }}${{ matrix.daily-pages.suffix }}${{ matrix.weekly-pages.suffix }}${{ matrix.personal-goals.suffix }}${{ matrix.work-goals.suffix }}${{ matrix.journal-pages.suffix }}${{ matrix.dark-mode.suffix }}"
       - name: Upload planner pdf to artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: planner-${{ matrix.date-ranges.suffix }}${{ matrix.daily-pages.suffix }}${{ matrix.weekly-pages.suffix }}${{ matrix.personal-goals.suffix }}${{ matrix.work-goals.suffix }}${{ matrix.journal-pages.suffix }}.pdf
-          path: dest/planner-${{ matrix.date-ranges.suffix }}${{ matrix.daily-pages.suffix }}${{ matrix.weekly-pages.suffix }}${{ matrix.personal-goals.suffix }}${{ matrix.work-goals.suffix }}${{ matrix.journal-pages.suffix }}.pdf
+          name: planner-${{ matrix.date-ranges.suffix }}${{ matrix.daily-pages.suffix }}${{ matrix.weekly-pages.suffix }}${{ matrix.personal-goals.suffix }}${{ matrix.work-goals.suffix }}${{ matrix.journal-pages.suffix }}${{ matrix.dark-mode.suffix }}.pdf
+          path: dest/planner-${{ matrix.date-ranges.suffix }}${{ matrix.daily-pages.suffix }}${{ matrix.weekly-pages.suffix }}${{ matrix.personal-goals.suffix }}${{ matrix.work-goals.suffix }}${{ matrix.journal-pages.suffix }}${{ matrix.dark-mode.suffix }}.pdf
   deploy:
     needs: build
     runs-on: ubuntu-latest
