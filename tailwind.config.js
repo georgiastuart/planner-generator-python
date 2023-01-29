@@ -23,6 +23,9 @@ module.exports = {
       },
       spacing: {
         '5mm': '10.4167mm'
+      },
+      colors: {
+        'dark': '#333333'
       }
     },
   },
