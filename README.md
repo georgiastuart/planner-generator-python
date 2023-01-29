@@ -90,7 +90,7 @@ technique, set margins to none and enable background images.
 
 ```
 usage: Python Planner Generator [-h] [--start-time START_TIME] [--end-time END_TIME] [--file-suffix FILE_SUFFIX] [--work-goals | --no-work-goals] [--personal-goals | --no-personal-goals]
-                                [--daily-pages | --no-daily-pages] [--weekly-pages | --no-weekly-pages] [--journals-per-page {0,1,2,4}]
+                                [--daily-pages | --no-daily-pages] [--weekly-pages | --no-weekly-pages] [--journals-per-page {0,1,2,4}] [--dark-mode | --no-dark-mode]
                                 start end
 
 GoodNotes 5 Optimized PDF Planner
@@ -111,4 +111,5 @@ options:
   --daily-pages, --no-daily-pages
   --weekly-pages, --no-weekly-pages
   --journals-per-page {0,1,2,4}
+  --dark-mode, --no-dark-mode
 ```

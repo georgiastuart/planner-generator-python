@@ -26,12 +26,16 @@
   @apply font-playfair text-2xl h-5mm items-center text-center;
 }
 
+.mini-cal-date-outside {
+  @apply mini-cal-date text-slate-300 dark:text-zinc-600;
+}
+
 .monthly-cal-day {
   @apply flex-grow flex font-bold font-playfair text-2xl h-10mm items-end justify-center text-center pb-2;
 }
 
 .monthly-cal-date {
-  @apply font-bold font-playfair text-2xl border-t border-l border-slate-800 pl-2 pb-2;
+  @apply font-bold font-playfair text-2xl border-t border-l border-slate-800 dark:border-zinc-400 pl-2 pb-2;
 }
 
 .monthly-cal .monthly-cal-date:nth-child(7n) {
@@ -68,4 +72,8 @@
 
 .reflection-header {
   @apply font-bold font-playfair text-4xl flex h-5mm items-center;
+}
+
+.lines {
+  @apply border-b border-slate-800 dark:border-zinc-400;
 }

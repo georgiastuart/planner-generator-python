@@ -16,10 +16,13 @@ def generate_html(planner_html, out_file):
   with open(out_file, 'w') as fp:
     fp.write(planner_html)
 
-def generate_pdf(html_file, css_file, out_file):
+def generate_pdf(html_file, css_file, out_file, dark_mode: bool):
   with sync_playwright() as p:
     browser = p.chromium.launch()
-    page = browser.new_page()
+    if dark_mode:
+      page = browser.new_page(color_scheme='dark')
+    else:
+      page = browser.new_page(color_scheme='light')
     page.goto(f"file://{abspath(html_file)}")
     page.add_style_tag(path=abspath(css_file))
     page.pdf(path=abspath(out_file), width='18.83in', height='11.77in', print_background=True)
@@ -319,6 +322,7 @@ if __name__ == "__main__":
   parser.add_argument('--daily-pages', action=BooleanOptionalAction, default=True) 
   parser.add_argument('--weekly-pages', action=BooleanOptionalAction, default=True) 
   parser.add_argument('--journals-per-page', default=0, type=int, choices=[0, 1, 2, 4])
+  parser.add_argument('--dark-mode', action=BooleanOptionalAction, default=False)
 
   args = parser.parse_args()
 
@@ -371,4 +375,4 @@ if __name__ == "__main__":
   planner = build_planner(pages, env)
 
   generate_html(planner, f'./dest/index{args.file_suffix}.html')
-  generate_pdf(f'dest/index{args.file_suffix}.html', f'dest/main.css', f'dest/planner{args.file_suffix}.pdf')
+  generate_pdf(f'dest/index{args.file_suffix}.html', f'dest/main.css', f'dest/planner{args.file_suffix}.pdf', args.dark_mode)

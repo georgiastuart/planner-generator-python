@@ -8,17 +8,17 @@
             <a href="#{{ days[0].strftime('%Y-W%W')}}">{{ days[0].strftime('W%-W').lower() }}</a>
           </div>
         </div>
-        <div class="border-y border-slate-800 h-5mm flex items-center">
+        <div class="border-y border-slate-800 dark:border-white h-5mm flex items-center">
           {% include "snippets/journal_icons.html" %}
         </div>
         {% for i in range(lines[journals_per_page]) %}
-        <div class="border-b border-slate-800 h-5mm"></div>
+        <div class="lines h-5mm"></div>
         {% endfor %}
       </div>
       <div>
         <div class="h-5mm"></div>
         {% for i in range(lines[journals_per_page] + 2) %}
-        <div class="border-b border-slate-800 h-5mm"></div>
+        <div class="lines h-5mm"></div>
         {% endfor %}
       </div>
     </div>
@@ -32,11 +32,11 @@
               <a href="#{{ day.strftime('%Y-W%W')}}">{{ day.strftime('W%-W').lower() }}</a>
             </div>
           </div>
-          <div class="border-y border-slate-800 h-5mm flex items-center">
+          <div class="border-y border-slate-800 dark:border-white h-5mm flex items-center">
             {% include "snippets/journal_icons.html" %}
           </div>
           {% for i in range(lines[journals_per_page]) %}
-          <div class="border-b border-slate-800 h-5mm"></div>
+          <div class="lines h-5mm"></div>
           {% endfor %}
         </div>
       {% endfor %}
