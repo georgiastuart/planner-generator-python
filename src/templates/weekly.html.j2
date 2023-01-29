@@ -11,7 +11,7 @@
   <div class="grid grid-cols-7 h-5mm">
     {% for day in ['m', 't', 'w', 't', 'f', 's', 's'] %}
     <div class="flex items-center">
-      <div class="h-6 mx-auto w-6 bg-slate-200 dark:bg-zinc-600 rounded-full font-playfair font-bold text-center text-slate-400">{{ day }}</div>
+      <div class="h-6 mx-auto w-6 bg-slate-200 dark:bg-zinc-600 rounded-full font-playfair font-bold text-center text-slate-400 dark:text-white">{{ day }}</div>
     </div>
     {% endfor %}
   </div>
@@ -21,7 +21,7 @@
 <div class="flex flex-col">
 <div class="weekly-day-heading mx-auto"><a href="#{{ days[i].strftime('%Y-%m-%d') }}">{{ days[i].strftime('%-d %a').lower() }}</a></div>
 {% for time in times %}
-<div class="h-5mm lines pb-1 font-playfair text-base font-bold flex items-center text-slate-300"><div>{{ time }}</div></div>
+<div class="h-5mm lines pb-1 font-playfair text-base font-bold flex items-center text-slate-300 dark:text-zinc-600"><div>{{ time }}</div></div>
 {% if not loop.last %}
 <div class="h-5mm lines"></div>
 {% endif %}

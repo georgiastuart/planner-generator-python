@@ -4,7 +4,7 @@
   <a href="#{{ month.strftime('%Y') }}">{{ month.strftime('%b %Y').lower() }}</a>
   </div>
   {% for i in range(24) %}
-  <div class="lines dark:dark-lines h-5mm"></div>
+  <div class="lines h-5mm"></div>
   {% endfor %}
 </div>
 <div class="col-span-7">
@@ -22,15 +22,15 @@
     <div><a href="#{{ cal_date[1] }}">{{ cal_date[0] }}</a></div>
     <div class="flex-grow"></div>
     {% if loop.index0 % 7 == 0 %}
-    <div class="text-base text-slate-300"><a href="#{{ cal_date[4] }}">{{ cal_date[3] }}</a></div>
+    <div class="text-base text-slate-300 dark:text-zinc-600"><a href="#{{ cal_date[4] }}">{{ cal_date[3] }}</a></div>
     {% endif %}
     </div>
     {% else %}
-    <div class="monthly-cal-date h-20mm flex flex-col text-slate-300">
+    <div class="monthly-cal-date h-20mm flex flex-col text-slate-300 dark:text-zinc-600">
     <div><a href="#{{ cal_date[1] }}">{{ cal_date[0] }}</a></div>
     <div class="flex-grow"></div>
     {% if loop.index0 % 7 == 0 %}
-    <div class="text-base text-slate-300"><a href="#{{ cal_date[4] }}">{{ cal_date[3] }}</a></div>
+    <div class="text-base text-slate-300 dark:text-zinc-600"><a href="#{{ cal_date[4] }}">{{ cal_date[3] }}</a></div>
     {% endif %}
     </div>
     {% endif %}
