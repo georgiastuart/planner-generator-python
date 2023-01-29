@@ -11,7 +11,7 @@ jobs:
       fail-fast: false
       matrix:
         python-version: ["3.10"]
-        date-ranges: [{arg: "2022-11-01 2022-12-31", suffix: "2022-nov-dec"}]
+        date-ranges: [{arg: "2023-02-01 2023-02-28", suffix: "2023-feb"}]
         personal-goals: [{arg: "--personal-goals", suffix: ""}, {arg: "--no-personal-goals", suffix: "-no-personal-goals"}]
         work-goals: [{arg: "--work-goals", suffix: ""}, {arg: "--no-work-goals", suffix: "-no-work-goals"}]
         daily-pages: [{arg: "--daily-pages", suffix: ""}, {arg: "--no-daily-pages", suffix: "-no-daily"}]
@@ -21,6 +21,7 @@ jobs:
           - {arg: "--journals-per-page=1", suffix: "-full-pg-journal"}
           - {arg: "--journals-per-page=2", suffix: "-half-pg-journal"}
           - {arg: "--journals-per-page=4", suffix: "-quarter-pg-journal"}
+        dark-mode: [{arg: "--dark-mode", suffix: "-dark-mode"}, {arg: "--no-dark-mode", suffix: ""}]
     steps:
       - name: Checkout
         uses: actions/checkout@v3

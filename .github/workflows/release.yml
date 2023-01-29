@@ -29,6 +29,7 @@ jobs:
           - {arg: "--journals-per-page=1", suffix: "-full-pg-journal"}
           - {arg: "--journals-per-page=2", suffix: "-half-pg-journal"}
           - {arg: "--journals-per-page=4", suffix: "-quarter-pg-journal"}
+        dark-mode: [{arg: "--dark-mode", suffix: "-dark-mode"}, {arg: "--no-dark-mode", suffix: ""}]
     steps:
       - name: Checkout
         uses: actions/checkout@v3
