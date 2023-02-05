@@ -23,14 +23,14 @@ jobs:
           - {arg: "--journals-per-page=4", suffix: "-quarter-pg-journal"}
         dark-mode: [{arg: "--dark-mode", suffix: "-dark-mode"}, {arg: "--no-dark-mode", suffix: ""}]
         include:
-          - date-ranges: [{arg: "2023-01-01 2023-01-31", suffix: "2023"}]
-            goal-planner: [{arg: "--goal-planner"}, suffix: "-goal-planner"]
-            orientation: [{arg: "--aspect-ratio=slim"}, suffix: "-slim"]
-            dark-mode: [{arg: "--dark-mode", suffix: "-dark-mode"}]
-          - date-ranges: [{arg: "2023-01-01 2023-01-31", suffix: "2023"}]
-            goal-planner: [{arg: "--goal-planner"}, suffix: "-goal-planner"]
-            orientation: [{arg: "--aspect-ratio=slim"}, suffix: "-slim"]
-            dark-mode: [{arg: "--no-dark-mode", suffix: ""}]
+          - date-ranges: {arg: "2023-01-01 2023-12-31", suffix: "2023"}
+            goal-planner: {arg: "--goal-planner", suffix: "-goal-planner"}
+            orientation: {arg: "--aspect-ratio=slim", suffix: "-slim"}
+            dark-mode: {arg: "--dark-mode", suffix: "-dark-mode"}
+          - date-ranges: {arg: "2023-01-01 2023-12-31", suffix: "2023"}
+            goal-planner: {arg: "--goal-planner", suffix: "-goal-planner"}
+            orientation: {arg: "--aspect-ratio=slim", suffix: "-slim"}
+            dark-mode: {arg: "--no-dark-mode", suffix: ""}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
