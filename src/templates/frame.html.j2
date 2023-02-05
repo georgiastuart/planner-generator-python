@@ -1,8 +1,25 @@
-<div class="w-gn-landscape max-h-gn-landscape break-after-page relative" id="{{ id }}">
+<div class="{% if aspect_ratio == 'landscape' %}w-gn-landscape h-gn-landscape{% elif aspect_ratio == 'slim' %}w-gn-slim h-gn-slim{% endif %}  break-after-page relative" id="{{ id }}">
   <div class="m-6">
   {{ content|safe }}
   </div>
-  <div class="absolute bottom-0 right-0 text-slate-300 dark:text-zinc-600 text-2xl pr-6">  
+  {% if goal_planner %}
+  <div class="absolute bottom-0 w-full font-light text-slate-300 dark:text-zinc-500">
+    {% for i in range(start.year, end.year + 1) %}
+      <div class="flex font-playfair justify-between text-sm mx-6">
+      <div><a href="#{{ i }}-goals">{{ i }}</a>:</div>
+      {% for month in ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'] %}
+      <div><a href="#{{ i }}-{{ '%02d' % loop.index }}-goals">{{ month }}</a></div>
+      {% endfor %}
+      </div>
+    <div class="grid grid-cols-13 justify-center justify-items-center font-playfair text-sm mx-6 pb-2">
+      {% for j in range(52) %}
+      <div><a href="#{{ i }}-W{{ '%02d' % (j + 1)}}-goals">{{ j + 1 }}</a></div>
+      {% endfor %}
+    </div>
+    {% endfor %}
+    </div>
+  {% endif %}
+  <div class="absolute bottom-0 right-0 text-slate-300 dark:text-zinc-500 text-2xl pr-6">  
   {% if journal_link %}
   <a href="#{{ journal_link }}"><i class="fa-solid fa-book pl-2"></i></a>
   {% endif %}

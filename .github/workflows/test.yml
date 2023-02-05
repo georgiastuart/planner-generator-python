@@ -22,6 +22,15 @@ jobs:
           - {arg: "--journals-per-page=2", suffix: "-half-pg-journal"}
           - {arg: "--journals-per-page=4", suffix: "-quarter-pg-journal"}
         dark-mode: [{arg: "--dark-mode", suffix: "-dark-mode"}, {arg: "--no-dark-mode", suffix: ""}]
+        include:
+          - date-ranges: [{arg: "2023-01-01 2023-01-31", suffix: "2023"}]
+            goal-planner: [{arg: "--goal-planner"}, suffix: "-goal-planner"]
+            orientation: [{arg: "--aspect-ratio=slim"}, suffix: "-slim"]
+            dark-mode: [{arg: "--dark-mode", suffix: "-dark-mode"}]
+          - date-ranges: [{arg: "2023-01-01 2023-01-31", suffix: "2023"}]
+            goal-planner: [{arg: "--goal-planner"}, suffix: "-goal-planner"]
+            orientation: [{arg: "--aspect-ratio=slim"}, suffix: "-slim"]
+            dark-mode: [{arg: "--no-dark-mode", suffix: ""}]
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -40,9 +49,9 @@ jobs:
       - name: Install playwright browsers
         run: playwright install
       - name: Build planner pages 
-        run: npm run build -- ${{ matrix.date-ranges.arg }} ${{ matrix.personal-goals.arg }} ${{ matrix.work-goals.arg }} ${{ matrix.daily-pages.arg }} ${{ matrix.weekly-pages.arg }} ${{ matrix.journal-pages.arg }} ${{ matrix.dark-mode.arg }} --file-suffix="-${{ matrix.date-ranges.suffix }}${{ matrix.daily-pages.suffix }}${{ matrix.weekly-pages.suffix }}${{ matrix.personal-goals.suffix }}${{ matrix.work-goals.suffix }}${{ matrix.journal-pages.suffix }}${{ matrix.dark-mode.suffix }}"
+        run: npm run build -- ${{ matrix.date-ranges.arg }} ${{ matrix.personal-goals.arg }} ${{ matrix.work-goals.arg }} ${{ matrix.daily-pages.arg }} ${{ matrix.weekly-pages.arg }} ${{ matrix.journal-pages.arg }} ${{ matrix.dark-mode.arg }} ${{ matrix.goal-planner.arg }} ${{ matrix.orientation.arg }} --file-suffix="-${{ matrix.date-ranges.suffix }}${{ matrix.daily-pages.suffix }}${{ matrix.weekly-pages.suffix }}${{ matrix.personal-goals.suffix }}${{ matrix.work-goals.suffix }}${{ matrix.journal-pages.suffix }}${{ matrix.dark-mode.suffix }}${{ matrix.goal-planner.suffix }}${{ matrix.orientation.suffix }}"
       - name: Upload planner pdf to artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: planner-${{ matrix.date-ranges.suffix }}${{ matrix.daily-pages.suffix }}${{ matrix.weekly-pages.suffix }}${{ matrix.personal-goals.suffix }}${{ matrix.work-goals.suffix }}${{ matrix.journal-pages.suffix }}${{ matrix.dark-mode.suffix }}.pdf
-          path: dest/planner-${{ matrix.date-ranges.suffix }}${{ matrix.daily-pages.suffix }}${{ matrix.weekly-pages.suffix }}${{ matrix.personal-goals.suffix }}${{ matrix.work-goals.suffix }}${{ matrix.journal-pages.suffix }}${{ matrix.dark-mode.suffix }}.pdf
+          name: planner-${{ matrix.date-ranges.suffix }}${{ matrix.daily-pages.suffix }}${{ matrix.weekly-pages.suffix }}${{ matrix.personal-goals.suffix }}${{ matrix.work-goals.suffix }}${{ matrix.journal-pages.suffix }}${{ matrix.dark-mode.suffix }}${{ matrix.goal-planner.suffix }}${{ matrix.orientation.suffix }}.pdf
+          path: dest/planner-${{ matrix.date-ranges.suffix }}${{ matrix.daily-pages.suffix }}${{ matrix.weekly-pages.suffix }}${{ matrix.personal-goals.suffix }}${{ matrix.work-goals.suffix }}${{ matrix.journal-pages.suffix }}${{ matrix.dark-mode.suffix }}${{ matrix.goal-planner.suffix }}${{ matrix.orientation.suffix }}.pdf

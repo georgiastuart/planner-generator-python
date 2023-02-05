@@ -16,7 +16,7 @@ def generate_html(planner_html, out_file):
   with open(out_file, 'w') as fp:
     fp.write(planner_html)
 
-def generate_pdf(html_file, css_file, out_file, dark_mode: bool):
+def generate_pdf(html_file, css_file, out_file, dark_mode: bool, orientation='landscape'):
   with sync_playwright() as p:
     browser = p.chromium.launch()
     if dark_mode:
@@ -25,7 +25,10 @@ def generate_pdf(html_file, css_file, out_file, dark_mode: bool):
       page = browser.new_page(color_scheme='light')
     page.goto(f"file://{abspath(html_file)}")
     page.add_style_tag(path=abspath(css_file))
-    page.pdf(path=abspath(out_file), width='18.83in', height='11.77in', print_background=True)
+    if orientation == 'landscape':
+      page.pdf(path=abspath(out_file), width='18.83in', height='11.77in', print_background=True)
+    else:
+      page.pdf(path=abspath(out_file), width='5.0in', height='11.77in', print_background=True)
     browser.close()
 
 def mini_calendar_dates(month, year):
@@ -44,9 +47,12 @@ def mini_calendar_dates(month, year):
     current_day += timedelta(days=1)
   return date_list
 
-def build_planner(pages, j2_env: j2.Environment):
+def build_planner(pages, aspect_ratio, j2_env: j2.Environment):
   return j2_env.get_template('full_planner.html.j2') \
-               .render(pages=pages)
+               .render(
+                  pages=pages,
+                  aspect_ratio=aspect_ratio
+                )
 
 def build_daily_pages(start: date, end: date, start_t: datetime, end_t: datetime, goals, j2_env: j2.Environment):
   def build_daily_page(inp_date, j2_template: j2.Template, times):
@@ -187,48 +193,95 @@ def build_annual_pages(start_year, end_year, goals, j2_env: j2.Environment):
 
   return annual_templates
 
-def build_annual_goal_pages(start_year, end_year, j2_env: j2.Environment):
-  def build_annual_goal_page(year, j2_template: j2.Template):
-    return j2_template.render(year=year, areas_of_focus=AREAS_OF_FOCUS)
+def build_annual_goal_pages(start, end, j2_env: j2.Environment, goal_planner=False, orientation='landscape'):
+  start_year = start.year
+  end_year = end.year
+  
+  def build_annual_goal_page(year, j2_template: j2.Template, areas_of_focus=AREAS_OF_FOCUS):
+    return j2_template.render(year=year, areas_of_focus=areas_of_focus)
 
-  annual_template = j2_env.get_template('annual_goals.html.j2')
+  if orientation == 'slim':
+    annual_template = j2_env.get_template('slim_annual_goals.html.j2')
+  else: 
+    annual_template = j2_env.get_template('annual_goals.html.j2')
   frame_template = j2_env.get_template('frame.html.j2')
   annual_templates = {}
 
   for year in range(start_year, end_year + 1):
-    content = build_annual_goal_page(year, annual_template)
-    annual_templates[str(year)] = frame_template.render(
-      content=content,
-      id=f'{year}-goals'
-    )
+    if orientation == 'slim':
+      for aof in AREAS_OF_FOCUS:
+        content = build_annual_goal_page(year, annual_template, areas_of_focus=[aof])
+        annual_templates[f'{str(year)}-{aof}'] = frame_template.render(
+          content=content,
+          aspect_ratio=orientation,
+          id=f'{year}-goals',
+          goal_planner=goal_planner,
+          start=start,
+          end=end
+        )
+    else: 
+      content = build_annual_goal_page(year, annual_template)
+      annual_templates[str(year)] = frame_template.render(
+        content=content,
+        aspect_ratio=orientation,
+        id=f'{year}-goals',
+        goal_planner=goal_planner,
+        start=start,
+        end=end
+      )
 
   return annual_templates
 
-def build_monthly_goal_pages(start, end, j2_env: j2.Environment):
-  def build_monthly_goal_page(first, j2_template: j2.Template):
-    return j2_template.render(first=first, areas_of_focus=AREAS_OF_FOCUS)
+def build_monthly_goal_pages(start, end, j2_env: j2.Environment, goal_planner=False, orientation='landscape'):
+  def build_monthly_goal_page(first, j2_template: j2.Template, areas_of_focus=AREAS_OF_FOCUS):
+    return j2_template.render(first=first, areas_of_focus=areas_of_focus)
 
-  annual_template = j2_env.get_template('monthly_goals.html.j2')
+  if orientation == 'slim':
+    template = j2_env.get_template('slim_monthly_goals.html.j2')
+  else:
+    template = j2_env.get_template('monthly_goals.html.j2')
   frame_template = j2_env.get_template('frame.html.j2')
   monthly_templates = {}
   cur_month = start + relativedelta(months=+0)
 
 
   while cur_month <= end:
-    content = build_monthly_goal_page(cur_month, annual_template)
-    monthly_templates[f"{cur_month.strftime('%Y-%m')}-goals"] = frame_template.render(
-      content=content,
-      id=f"{cur_month.strftime('%Y-%m')}-goals"
-    )
+    if orientation == 'slim':
+      for i in range(0, len(AREAS_OF_FOCUS), 2):
+        aof = AREAS_OF_FOCUS[i:i + 2]
+        content = build_monthly_goal_page(cur_month, template, areas_of_focus=aof)
+        monthly_templates[f"{cur_month.strftime('%Y-%m')}-goals-{i // 2}"] = frame_template.render(
+          content=content,
+          aspect_ratio=orientation,
+          id=f"{cur_month.strftime('%Y-%m')}-goals",
+          goal_planner=goal_planner,
+          start=start,
+          end=end
+        )
+
+    else: 
+      content = build_monthly_goal_page(cur_month, template)
+      monthly_templates[f"{cur_month.strftime('%Y-%m')}-goals"] = frame_template.render(
+        content=content,
+        aspect_ratio=orientation,
+        id=f"{cur_month.strftime('%Y-%m')}-goals",
+        goal_planner=goal_planner,
+        start=start,
+        end=end
+      )
     cur_month += relativedelta(months=+1)
 
   return monthly_templates
 
-def build_weekly_goal_pages(start, end, j2_env: j2.Environment):
+def build_weekly_goal_pages(start, end, j2_env: j2.Environment, goal_planner=False, orientation='landscape'):
   def build_monthly_goal_page(first, j2_template: j2.Template):
     return j2_template.render(first=first, last=first+relativedelta(days=6), areas_of_focus=AREAS_OF_FOCUS)
 
-  weekly_template = j2_env.get_template('weekly_goals.html.j2')
+  if orientation == 'slim':
+    weekly_template = j2_env.get_template('slim_weekly_goals.html.j2')
+    reflection_template = j2_env.get_template('slim_reflection.html.j2')
+  else:
+    weekly_template = j2_env.get_template('weekly_goals.html.j2')
   frame_template = j2_env.get_template('frame.html.j2')
   weekly_templates = {}
   preceding_monday = start - timedelta(days=start.weekday())
@@ -239,8 +292,24 @@ def build_weekly_goal_pages(start, end, j2_env: j2.Environment):
     content = build_monthly_goal_page(cur_week, weekly_template)
     weekly_templates[f"{cur_week.strftime('%Y-W%W')}-goals"] = frame_template.render(
       content=content,
-      id=f"{cur_week.strftime('%Y-W%W')}-goals"
+      id=f"{cur_week.strftime('%Y-W%W')}-goals",
+      goal_planner=goal_planner,
+      aspect_ratio=orientation,
+      start=start,
+      end=end
     )
+    if orientation == 'slim':
+      content = reflection_template.render(
+        dates=f"{ cur_week.strftime('%Y W%-W') }: { cur_week.strftime('%-d %b').lower() } - { (cur_week + relativedelta(days=6)).strftime('%-d %b').lower() }"
+      )
+      weekly_templates[f"{cur_week.strftime('%Y-W%W')}-goals-reflection"] = frame_template.render(
+          content=content,
+          id=f"{cur_week.strftime('%Y-W%W')}-goals-reflection",
+          goal_planner=goal_planner,
+          aspect_ratio=orientation,
+          start=start,
+          end=end
+        )
     cur_week += relativedelta(weeks=+1)
 
   return weekly_templates
@@ -323,6 +392,8 @@ if __name__ == "__main__":
   parser.add_argument('--weekly-pages', action=BooleanOptionalAction, default=True) 
   parser.add_argument('--journals-per-page', default=0, type=int, choices=[0, 1, 2, 4])
   parser.add_argument('--dark-mode', action=BooleanOptionalAction, default=False)
+  parser.add_argument('--aspect-ratio', type=str, default='landscape', choices=['landscape', 'slim'])
+  parser.add_argument('--goal-planner', action=BooleanOptionalAction, default=False)
 
   args = parser.parse_args()
 
@@ -347,32 +418,37 @@ if __name__ == "__main__":
 
   pages = []
 
-  pages.extend(build_annual_pages(start_date.year, end_date.year, goals, env).values())
-  pages.extend(build_monthly_pages(start_date, end_date, goals, env).values())
-
-  if args.weekly_pages:
-    pages.extend(build_weekly_pages(start_date, end_date, start_time, end_time, goals, env).values())
-
-  if args.daily_pages:
-    pages.extend(build_daily_pages(start_date, end_date, start_time, end_time, goals, env).values())
-
-  if args.personal_goals:
-    pages.extend(build_annual_goal_pages(start_date.year, end_date.year, env).values())
-    pages.extend(build_monthly_goal_pages(start_date, end_date, env).values())
+  if args.goal_planner:
+    pages.extend(build_annual_goal_pages(start_date, end_date, env, goal_planner=True, orientation=args.aspect_ratio).values())
+    pages.extend(build_monthly_goal_pages(start_date, end_date, env, goal_planner=True, orientation=args.aspect_ratio).values())
+    pages.extend(build_weekly_goal_pages(start_date, end_date, env, goal_planner=True, orientation=args.aspect_ratio).values())
+  else:
+    pages.extend(build_annual_pages(start_date.year, end_date.year, goals, env).values())
+    pages.extend(build_monthly_pages(start_date, end_date, goals, env).values())
 
     if args.weekly_pages:
-      pages.extend(build_weekly_goal_pages(start_date, end_date, env).values())
+      pages.extend(build_weekly_pages(start_date, end_date, start_time, end_time, goals, env).values())
 
-  if args.work_goals:
-    pages.extend(build_monthly_work_goal_pages(start_date, end_date, env).values())
+    if args.daily_pages:
+      pages.extend(build_daily_pages(start_date, end_date, start_time, end_time, goals, env).values())
 
-    if args.weekly_pages:
-      pages.extend(build_weekly_work_goal_pages(start_date, end_date, env).values())
+    if args.personal_goals:
+      pages.extend(build_annual_goal_pages(start_date, end_date, env).values())
+      pages.extend(build_monthly_goal_pages(start_date, end_date, env).values())
 
-  if args.journals_per_page > 0:
-    pages.extend(build_daily_journal(start_date, end_date, args.journals_per_page, env).values())
+      if args.weekly_pages:
+        pages.extend(build_weekly_goal_pages(start_date, end_date, env).values())
 
-  planner = build_planner(pages, env)
+    if args.work_goals:
+      pages.extend(build_monthly_work_goal_pages(start_date, end_date, env).values())
+
+      if args.weekly_pages:
+        pages.extend(build_weekly_work_goal_pages(start_date, end_date, env).values())
+
+    if args.journals_per_page > 0:
+      pages.extend(build_daily_journal(start_date, end_date, args.journals_per_page, env).values())
+
+  planner = build_planner(pages, args.aspect_ratio, env)
 
   generate_html(planner, f'./dest/index{args.file_suffix}.html')
-  generate_pdf(f'dest/index{args.file_suffix}.html', f'dest/main.css', f'dest/planner{args.file_suffix}.pdf', args.dark_mode)
+  generate_pdf(f'dest/index{args.file_suffix}.html', f'dest/main.css', f'dest/planner{args.file_suffix}.pdf', args.dark_mode, orientation=args.aspect_ratio)
